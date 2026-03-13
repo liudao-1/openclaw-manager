@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OpenClaw Manager</title>
+  <title>OpenClaw 管理器</title>
   <style>
     * {
       margin: 0;
@@ -12,7 +12,7 @@
     }
     
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
       background: #0a0a0f;
       color: #e0e0e0;
       min-height: 100vh;
@@ -203,64 +203,64 @@
       <div class="logo-icon">🦊</div>
       OpenClaw
     </div>
-    <div class="nav-item active">Dashboard</div>
-    <div class="nav-item">Skills</div>
-    <div class="nav-item">Sessions</div>
-    <div class="nav-item">Settings</div>
+    <div class="nav-item active">控制台</div>
+    <div class="nav-item">技能库</div>
+    <div class="nav-item">会话</div>
+    <div class="nav-item">设置</div>
   </div>
   
   <div class="main">
     <div class="header">
-      <h1>Dashboard</h1>
-      <span class="status-badge">● Online</span>
+      <h1>控制台</h1>
+      <span class="status-badge">● 在线</span>
     </div>
     
     <div class="cards">
       <div class="card">
-        <div class="card-title">Active Sessions</div>
+        <div class="card-title">活跃会话</div>
         <div class="card-value purple">3</div>
       </div>
       <div class="card">
-        <div class="card-title">Installed Skills</div>
+        <div class="card-title">已安装技能</div>
         <div class="card-value green" id="skill-count">54</div>
       </div>
       <div class="card">
-        <div class="card-title">Messages Today</div>
+        <div class="card-title">今日消息</div>
         <div class="card-value blue">127</div>
       </div>
     </div>
     
-    <div class="section-title">Recent Skills</div>
+    <div class="section-title">最近安装的技能</div>
     <div class="skill-grid" id="skill-grid">
       <div class="skill-card">
         <div class="skill-name">skill-vetter</div>
-        <div class="skill-status">● Installed</div>
+        <div class="skill-status">● 已安装</div>
       </div>
       <div class="skill-card">
         <div class="skill-name">self-improving-agent</div>
-        <div class="skill-status">● Installed</div>
+        <div class="skill-status">● 已安装</div>
       </div>
       <div class="skill-card">
         <div class="skill-name">proactive-agent</div>
-        <div class="skill-status">● Installed</div>
+        <div class="skill-status">● 已安装</div>
       </div>
       <div class="skill-card">
         <div class="skill-name">agent-browser</div>
-        <div class="skill-status">● Installed</div>
+        <div class="skill-status">● 已安装</div>
       </div>
       <div class="skill-card">
         <div class="skill-name">tavily</div>
-        <div class="skill-status">● Installed</div>
+        <div class="skill-status">● 已安装</div>
       </div>
       <div class="skill-card">
         <div class="skill-name">office</div>
-        <div class="skill-status">● Installed</div>
+        <div class="skill-status">● 已安装</div>
       </div>
     </div>
   </div>
   
   <script>
-    // Load skills from localStorage or use defaults
+    // 从 localStorage 加载技能或使用默认
     async function loadSkills() {
       try {
         const response = await fetch('/api/skills');
@@ -271,11 +271,11 @@
         grid.innerHTML = skills.slice(0, 6).map(skill => `
           <div class="skill-card">
             <div class="skill-name">${skill.name}</div>
-            <div class="skill-status">● ${skill.status || 'Installed'}</div>
+            <div class="skill-status">● ${skill.status || '已安装'}</div>
           </div>
         `).join('');
       } catch (e) {
-        console.log('Using default skills');
+        console.log('使用默认技能');
       }
     }
     
