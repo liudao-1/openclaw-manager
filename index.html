@@ -542,6 +542,9 @@
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
     
+    const GATEWAY_TOKEN = "9b6eadd4d08dada1da3fcb6b0949498dc2b9dcfe14bcc05a";
+    const API_BASE = "http://localhost:18789";
+    
     async function sendMessage() {
       const input = document.getElementById('chat-input');
       const content = input.value.trim();
@@ -556,19 +559,51 @@
       // Show typing indicator
       document.getElementById('typing-indicator').classList.add('active');
       
-      // Simulate response (in real implementation, this would call the OpenClaw API)
-      setTimeout(() => {
+      try {
+        // Build messages with attachments
+        let userContent = content;
+        if (attachments.length > 0) {
+          const attachmentContents = attachments.map(att => {
+            if (att.type.startsWith('image/')) {
+              return { type: "image_url", image_url: { url: att.data } };
+            }
+            return { type: "text", text: `[附件: ${att.name}]` };
+          });
+          userContent = [
+            { type: "text", text: content || "请分析这个附件" },
+            ...attachmentContents
+          ];
+        }
+        
+        messages.push({ role: "user", content: userContent });
+        
+        const response = await fetch(`${API_BASE}/v1/chat/completions`, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${GATEWAY_TOKEN}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model: "openclaw:main",
+            messages: messages,
+            max_tokens: 2048
+          })
+        });
+        
+        const data = await response.json();
         document.getElementById('typing-indicator').classList.remove('active');
         
-        const responses = [
-          "收到你的消息了！有什么我可以帮你的吗？",
-          "好的，让我来处理这个。你想要我做什么？",
-          "我明白了。有什么具体的要求吗？",
-          "收到！如果需要更多帮助随时告诉我。",
-        ];
-        
-        addAssistantMessage(responses[Math.floor(Math.random() * responses.length)]);
-      }, 1000 + Math.random() * 1500);
+        if (data.choices && data.choices[0]) {
+          const reply = data.choices[0].message.content;
+          messages.push({ role: "assistant", content: reply });
+          addAssistantMessage(reply);
+        } else {
+          addAssistantMessage("抱歉，回复出错: " + JSON.stringify(data));
+        }
+      } catch (error) {
+        document.getElementById('typing-indicator').classList.remove('active');
+        addAssistantMessage("网络错误: " + error.message);
+      }
     }
     
     loadDashboard();
